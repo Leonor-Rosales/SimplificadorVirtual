@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Resultado{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Resultado de la simplificación</h2>
+    
+    <ul class="list-group mt-3">
+        {% for paso in pasos %}
+            <li class="list-group-item">{{ paso }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Guardar resultado -->
+    <form method="POST" action="{{ url_for('routes.guardar') }}">
+        <input type="hidden" name="pasos" value="{{ pasos | join('\n') }}">
+        <button type="submit" class="btn btn-success mt-3">Guardar resultado</button>
+    </form>
+</div>
+{% endblock %}
