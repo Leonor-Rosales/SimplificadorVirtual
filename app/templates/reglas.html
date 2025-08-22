@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Reglas del Álgebra Booleana{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Reglas del Álgebra Booleana</h1>
+    <p class="lead">Aquí tienes las principales leyes y cómo debes ingresar tus funciones en el simplificador.</p>
+
+    <!-- Guía para el usuario -->
+    <div class="alert alert-info">
+        <h5>Cómo ingresar tu función:</h5>
+        <ul>
+            <li><strong>OR</strong>: usa <code>+</code> → Ejemplo: <code>A + B</code></li>
+            <li><strong>AND</strong>: usa <code>*</code> → Ejemplo: <code>A * B</code></li>
+            <li><strong>NOT</strong>: usa <code>'</code> → Ejemplo: <code>A'</code></li>
+            <li>Puedes combinar: <code>(A + B) * C'</code></li>
+        </ul>
+    </div>
+
+    <!-- Flashcards con las reglas -->
+    <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
+        <!-- Identidad -->
+        <div class="col">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Ley de Identidad</h5>
+                    <p class="card-text">A + 0 = A<br>A * 1 = A</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dominación -->
+        <div class="col">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Ley de Dominación</h5>
+                    <p class="card-text">A + 1 = 1<br>A * 0 = 0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Idempotencia -->
+        <div class="col">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Ley de Idempotencia</h5>
+                    <p class="card-text">A + A = A<br>A * A = A</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complemento -->
+        <div class="col">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Ley del Complemento</h5>
+                    <p class="card-text">A + A' = 1<br>A * A' = 0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doble Negación -->
+        <div class="col">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Ley de la Doble Negación</h5>
+                    <p class="card-text">(A')' = A</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conmutativa -->
+        <div class="col">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Ley Conmutativa</h5>
+                    <p class="card-text">A + B = B + A<br>A * B = B * A</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Asociativa -->
+        <div class="col">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Ley Asociativa</h5>
+                    <p class="card-text">(A + B) + C = A + (B + C)<br>(A * B) * C = A * (B * C)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Distributiva -->
+        <div class="col">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Ley Distributiva</h5>
+                    <p class="card-text">A * (B + C) = A*B + A*C<br>A + (B*C) = (A+B)*(A+C)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

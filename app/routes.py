@@ -13,3 +13,7 @@ def index():
         resultado, pasos = simplificar(expresion)
 
     return render_template("index.html", resultado=resultado, pasos=pasos)
+
+@main.route("/reglas")
+def reglas():
+    return render_template("reglas.html")
