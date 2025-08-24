@@ -1,21 +1,88 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultado de Simplificación</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f9f9f9;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px 15px;
+            text-align: center;
+        }
+        th {
+            background: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+        .final {
+            font-weight: bold;
+            color: #d32f2f;
+            background: #ffe6e6;
+        }
+        .btn-volver {
+            display: block;
+            width: fit-content;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+        .btn-volver:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
 
-{% block title %}Resultado{% endblock %}
+    <h1>Resultado de la Simplificación</h1>
 
-{% block content %}
-<div class="container mt-4">
-    <h2>Resultado de la simplificación</h2>
-    
-    <ul class="list-group mt-3">
-        {% for paso in pasos %}
-            <li class="list-group-item">{{ paso }}</li>
+    <table>
+        <tr>
+            <th>Paso</th>
+            <th>Ley Aplicada</th>
+            <th>Resultado</th>
+        </tr>
+        {% for i, paso in enumerate(pasos) %}
+            {% if 'Resultado final' not in paso.ley %}
+            <tr>
+                <td>Paso {{ i+1 }}</td>
+                <td>{{ paso.ley }}</td>
+                <td>{{ paso.resultado }}</td>
+            </tr>
+            {% endif %}
         {% endfor %}
-    </ul>
+        <!-- Última fila solo para el resultado final -->
+        {% for paso in pasos %}
+            {% if 'Resultado final' in paso.ley %}
+            <tr class="final">
+                <td colspan="2">{{ paso.ley }}</td>
+                <td>{{ paso.resultado }}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
 
-    <!-- Guardar resultado -->
-    <form method="POST" action="{{ url_for('routes.guardar') }}">
-        <input type="hidden" name="pasos" value="{{ pasos | join('\n') }}">
-        <button type="submit" class="btn btn-success mt-3">Guardar resultado</button>
-    </form>
-</div>
-{% endblock %}
+    <a href="/" class="btn-volver">← Volver</a>
+
+</body>
+</html>
