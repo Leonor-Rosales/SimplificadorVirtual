@@ -4,26 +4,49 @@
 
 {% block content %}
 <h1 class="mb-4">Simplificador de Funciones Booleanas</h1>
-<p class="lead">Ingresa una función booleana y observa cómo se simplifica paso a paso.</p>
+<p class="lead">Construye tu función booleana usando los botones y observa cómo se simplifica paso a paso.</p>
 
 <div class="card shadow-sm">
   <div class="card-body">
-    <form method="post" class="row g-3">
-      <div class="col-md-9">
-        <input type="text" name="expresion" class="form-control" placeholder="Ejemplo: (A + B') * C + 0" required>
-      </div>
-      <div class="col-md-3">
-        <button type="submit" class="btn btn-primary w-100 btn-lg">Simplificar</button>
-      </div>
+
+    <!-- Entrada de texto solo lectura -->
+    <div class="mb-3">
+      <input type="text" id="entrada" class="form-control form-control-lg" placeholder="Construye tu expresión" value="{{ funcion_original }}" readonly>
+    </div>
+
+    <!-- Botones de variables -->
+    <div class="mb-2">
+      <button type="button" class="btn btn-outline-primary btn-lg" onclick="agregar('A')">A</button>
+      <button type="button" class="btn btn-outline-primary btn-lg" onclick="agregar('B')">B</button>
+      <button type="button" class="btn btn-outline-primary btn-lg" onclick="agregar('C')">C</button>
+      <button type="button" class="btn btn-outline-primary btn-lg" onclick="agregar('D')">D</button>
+      <button type="button" class="btn btn-outline-primary btn-lg" onclick="agregar('E')">E</button>
+    </div>
+
+    <!-- Botones de valores constantes -->
+    <div class="mb-2">
+      <button type="button" class="btn btn-outline-secondary btn-lg" onclick="agregar('1')">1</button>
+      <button type="button" class="btn btn-outline-secondary btn-lg" onclick="agregar('0')">0</button>
+    </div>
+
+    <!-- Botones de operadores -->
+    <div class="mb-2">
+      <button type="button" class="btn btn-outline-warning btn-lg" onclick="agregar('+')">+</button>
+      <button type="button" class="btn btn-outline-warning btn-lg" onclick="agregar('*')">*</button>
+      <button type="button" class="btn btn-outline-warning btn-lg" onclick="agregar('~')">~</button>
+      <button type="button" class="btn btn-outline-warning btn-lg" onclick="agregar('(')">(</button>
+      <button type="button" class="btn btn-outline-warning btn-lg" onclick="agregar(')')">)</button>
+      <button type="button" class="btn btn-danger btn-lg" onclick="borrar()">⌫</button>
+      <button type="button" class="btn btn-danger btn-lg" onclick="limpiar()">C</button>
+    </div>
+
+    <!-- Botón para simplificar -->
+    <form method="POST" class="mt-3">
+      <input type="hidden" id="hidden-expresion" name="expresion">
+      <button type="submit" class="btn btn-primary btn-lg w-100" onclick="actualizarExpresion()">Simplificar</button>
     </form>
 
-    {% if subs_requerida %}
-      <hr>
-      <div class="alert alert-warning mt-2">
-        <strong>Suscripción requerida:</strong> {{ mensaje_subs }}
-      </div>
-    {% endif %}
-
+    <!-- Mostrar función ingresada -->
     {% if funcion_original %}
       <hr>
       <div class="alert alert-info">
@@ -31,18 +54,20 @@
       </div>
     {% endif %}
 
-    {% if pasos_detallados and not subs_requerida %}
+    <!-- Mostrar pasos de simplificación -->
+    {% if pasos_detallados %}
       <h5 class="mt-3">Pasos de simplificación:</h5>
       <ol class="list-group list-group-numbered">
         {% for p in pasos_detallados %}
           <li class="list-group-item">
-            Paso {{ loop.index }}: {{ p.ley }} → {{ p.despues }}
+            Paso {{ loop.index }}: {{ p.antes }} → {{ p.despues }} ({{ p.ley }})
           </li>
         {% endfor %}
       </ol>
     {% endif %}
 
-    {% if resultado and not subs_requerida %}
+    <!-- Mostrar resultado final -->
+    {% if resultado %}
       <hr>
       <h4>Respuesta final:</h4>
       <div class="alert alert-success fs-5"><strong>{{ resultado }}</strong></div>
@@ -53,6 +78,37 @@
         <button type="submit" class="btn btn-success mt-2">Guardar resultado</button>
       </form>
     {% endif %}
+
   </div>
 </div>
+<!-- Historial de expresiones -->
+  {% if historial %}
+  <div class="mb-3">
+    <label for="historial" class="form-label">Historial de expresiones:</label>
+    <select id="historial" class="form-select" onchange="cargarHistorial()">
+      <option value="">-- Selecciona una expresión --</option>
+      {% for h in historial %}
+        <option value="{{ h }}">{{ h }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  {% endif %}
+<script>
+function agregar(valor) {
+    document.getElementById('entrada').value += valor;
+}
+
+function borrar() {
+    let e = document.getElementById('entrada');
+    e.value = e.value.slice(0, -1);
+}
+
+function limpiar() {
+    document.getElementById('entrada').value = '';
+}
+
+function actualizarExpresion() {
+    document.getElementById('hidden-expresion').value = document.getElementById('entrada').value;
+}
+</script>
 {% endblock %}

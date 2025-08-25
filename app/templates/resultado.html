@@ -62,10 +62,10 @@
             <th>Ley Aplicada</th>
             <th>Resultado</th>
         </tr>
-        {% for i, paso in enumerate(pasos) %}
+        {% for paso in pasos %}
             {% if 'Resultado final' not in paso.ley %}
             <tr>
-                <td>Paso {{ i+1 }}</td>
+                <td>Paso {{ loop.index }}</td>
                 <td>{{ paso.ley }}</td>
                 <td>{{ paso.resultado }}</td>
             </tr>
