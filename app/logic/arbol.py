@@ -5,14 +5,14 @@ def validar_expresion(expresion):
     if not expresion.strip():
         return "La expresión no puede estar vacía."
 
-    # Quitar espacios
+    # quitamos espacios
     expr = expresion.replace(" ", "")
 
-    # Verificar caracteres válidos
+    # verificamos caracteres validos
     if not re.fullmatch(r"[A-Z01~+*()]*", expr):
         return "La expresión contiene caracteres inválidos."
 
-    # Verificar paréntesis balanceados
+    #balancear
     paren = 0
     for c in expr:
         if c == "(":
@@ -24,7 +24,7 @@ def validar_expresion(expresion):
     if paren != 0:
         return "Paréntesis desbalanceados: falta cerrar algún paréntesis."
 
-    # Verificar operadores dobles consecutivos (excepto ~~)
+    # verificaciopn de operadores
     operadores = "+*"
     prev = ""
     for c in expr:
@@ -32,7 +32,7 @@ def validar_expresion(expresion):
             return f"Operadores consecutivos no permitidos: '{prev}{c}'"
         prev = c
 
-    # Verificar que la expresión no comience ni termine con operadores prohibidos
+    # verificar si la funcion empieza con *
     if expr[0] in "+*" or expr[-1] in "+*":
         return "La expresión no puede comenzar ni terminar con '+' o '*'"
 

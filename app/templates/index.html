@@ -7,7 +7,7 @@
 <p class="lead">Construye tu función booleana usando los botones y observa cómo se simplifica paso a paso.</p>
 
 <div class="card shadow-sm position-relative">
-  <!-- Botón +Más Variables -->
+
   <button type="button" class="btn btn-success position-absolute top-0 end-0 m-2"
           style="background-color: #76c776; border-color: #76c776;"
           onclick="window.location.href='{{ url_for('routes.variables') }}'">
@@ -16,7 +16,7 @@
 
   <div class="card-body pt-5">
 
-    <!-- Entrada de texto editable -->
+
     <div class="mb-2">
       <input type="text" id="entrada" class="form-control form-control-lg"
              placeholder="Construye tu expresión" value="{{ funcion_original }}">
@@ -25,12 +25,9 @@
       {% endif %}
     </div>
 
-    <!-- Contenedor principal con espacio entre los elementos -->
-    <div class="d-flex justify-content-between align-items-start">
 
-      <!-- Columna de botones de letras, números y operadores -->
+    <div class="d-flex justify-content-between align-items-start">
       <div class="flex-column me-3">
-        <!-- Botones de variables -->
         <div class="mb-2">
           <button type="button" class="btn btn-outline-primary btn-lg" onclick="agregar('A')">A</button>
           <button type="button" class="btn btn-outline-primary btn-lg" onclick="agregar('B')">B</button>
@@ -39,13 +36,11 @@
           <button type="button" class="btn btn-outline-primary btn-lg" onclick="agregar('E')">E</button>
         </div>
 
-        <!-- Botones de valores constantes -->
         <div class="mb-2">
           <button type="button" class="btn btn-outline-secondary btn-lg" onclick="agregar('1')">1</button>
           <button type="button" class="btn btn-outline-secondary btn-lg" onclick="agregar('0')">0</button>
         </div>
 
-        <!-- Botones de operadores -->
         <div class="mb-2">
           <button type="button" class="btn btn-outline-warning btn-lg" onclick="agregar('+')">+</button>
           <button type="button" class="btn btn-outline-warning btn-lg" onclick="agregar('*')">*</button>
@@ -55,7 +50,6 @@
         </div>
       </div>
 
-      <!-- Columna de botones "Limpiar/Eliminar" -->
       <div class="d-flex flex-column justify-content-center ms-auto">
         <button type="button" class="btn btn-danger btn-lg mb-2" onclick="borrar()">⌫ Eliminar</button>
         <button type="button" class="btn btn-danger btn-lg" onclick="limpiar()">Limpiar</button>
@@ -63,13 +57,11 @@
 
     </div>
 
-    <!-- Botón para simplificar -->
     <form method="POST" class="mt-3" onsubmit="actualizarExpresion()">
       <input type="hidden" id="hidden-expresion" name="expresion">
       <button type="submit" class="btn btn-primary btn-lg w-100">Simplificar</button>
     </form>
 
-    <!-- Mostrar función ingresada -->
     {% if funcion_original %}
       <hr>
       <div class="alert alert-info">
@@ -77,7 +69,6 @@
       </div>
     {% endif %}
 
-    <!-- Mostrar pasos de simplificación -->
     {% if pasos_detallados %}
       <h5 class="mt-3">Pasos de simplificación:</h5>
       <ol class="list-group list-group-numbered">
@@ -89,13 +80,11 @@
       </ol>
     {% endif %}
 
-    <!-- Mostrar resultado final -->
     {% if resultado %}
       <hr>
       <h4>Respuesta final:</h4>
       <div class="alert alert-success fs-5"><strong>{{ resultado }}</strong></div>
 
-      <!-- Guardar resultado -->
       <form method="POST" action="{{ url_for('routes.guardar') }}">
         <input type="hidden" name="pasos" value="{{ pasos_txt }}">
         <button type="submit" class="btn btn-success mt-2">Guardar resultado</button>
@@ -105,7 +94,6 @@
   </div>
 </div>
 
-<!-- Historial de expresiones -->
 {% if historial %}
 <div class="mb-3">
   <label for="historial" class="form-label">Historial de expresiones:</label>

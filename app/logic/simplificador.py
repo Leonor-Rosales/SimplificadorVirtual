@@ -14,13 +14,13 @@ def simplificar_arbol(arbol):
 
         antes = str(nodo)
 
-        # 🔹 Idempotencia
+        # Idempotencia: A + A = A, A * A = A
         if nodo.valor in ["+", "*"] and nodo.izquierda and nodo.derecha:
             if str(nodo.izquierda) == str(nodo.derecha):
                 pasos.append({"ley": "Idempotencia", "antes": antes, "despues": str(nodo.izquierda)})
                 return recorrer(nodo.izquierda)
 
-        # 🔹 Elemento nulo e identidad
+        #  Identidad y elemento nulo
         if nodo.valor == "+":
             if str(nodo.izquierda) == "0":
                 pasos.append({"ley": "Elemento nulo", "antes": antes, "despues": str(nodo.derecha)})
@@ -28,6 +28,10 @@ def simplificar_arbol(arbol):
             if str(nodo.derecha) == "0":
                 pasos.append({"ley": "Elemento nulo", "antes": antes, "despues": str(nodo.izquierda)})
                 return recorrer(nodo.izquierda)
+            if str(nodo.izquierda) == "1" or str(nodo.derecha) == "1":
+                pasos.append({"ley": "Identidad", "antes": antes, "despues": "1"})
+                return Nodo("1")
+
         if nodo.valor == "*":
             if str(nodo.izquierda) == "0" or str(nodo.derecha) == "0":
                 pasos.append({"ley": "Elemento nulo", "antes": antes, "despues": "0"})
@@ -39,44 +43,68 @@ def simplificar_arbol(arbol):
                 pasos.append({"ley": "Elemento identidad", "antes": antes, "despues": str(nodo.izquierda)})
                 return recorrer(nodo.izquierda)
 
-        # 🔹 Complemento
-        if nodo.valor == "+" and (str(nodo.izquierda) == f"~({nodo.derecha})" or str(nodo.derecha) == f"~({nodo.izquierda})"):
+        # Complemento
+        if nodo.valor == "+" and (
+            str(nodo.izquierda) == f"~({nodo.derecha})" or str(nodo.derecha) == f"~({nodo.izquierda})"
+        ):
             pasos.append({"ley": "Complemento", "antes": antes, "despues": "1"})
             return Nodo("1")
-        if nodo.valor == "*" and (str(nodo.izquierda) == f"~({nodo.derecha})" or str(nodo.derecha) == f"~({nodo.izquierda})"):
+        if nodo.valor == "*" and (
+            str(nodo.izquierda) == f"~({nodo.derecha})" or str(nodo.derecha) == f"~({nodo.izquierda})"
+        ):
             pasos.append({"ley": "Complemento", "antes": antes, "despues": "0"})
             return Nodo("0")
 
-        # 🔹 Doble negación
-        if nodo.valor == "~" and nodo.izquierda.valor == "~":
+        # Doble negación
+        if nodo.valor == "~" and nodo.izquierda and nodo.izquierda.valor == "~":
             pasos.append({"ley": "Doble negación", "antes": antes, "despues": str(nodo.izquierda.izquierda)})
             return recorrer(nodo.izquierda.izquierda)
 
-        # 🔹 Ley de absorción (OR)
+        # Ley de absorción
         if nodo.valor == "+" and nodo.izquierda and nodo.derecha:
-            izq = str(nodo.izquierda)
-            der = str(nodo.derecha)
-            # A + A*B = A
-            if "*" in der and izq in der:
+            izq, der = str(nodo.izquierda), str(nodo.derecha)
+            if "*" in der and izq in der:  # A + A*B = A
                 pasos.append({"ley": "Absorción", "antes": antes, "despues": izq})
                 return recorrer(nodo.izquierda)
-            # A*B + A = A
-            if "*" in izq and der in izq:
+            if "*" in izq and der in izq:  # A*B + A = A
                 pasos.append({"ley": "Absorción", "antes": antes, "despues": der})
                 return recorrer(nodo.derecha)
 
-        # 🔹 Ley de absorción (AND)
         if nodo.valor == "*" and nodo.izquierda and nodo.derecha:
-            izq = str(nodo.izquierda)
-            der = str(nodo.derecha)
-            # A * (A + B) = A
-            if "+" in der and izq in der:
+            izq, der = str(nodo.izquierda), str(nodo.derecha)
+            if "+" in der and izq in der:  # A * (A+B) = A
                 pasos.append({"ley": "Absorción", "antes": antes, "despues": izq})
                 return recorrer(nodo.izquierda)
-            # (A + B) * A = A
-            if "+" in izq and der in izq:
+            if "+" in izq and der in izq:  # (A+B) * A = A
                 pasos.append({"ley": "Absorción", "antes": antes, "despues": der})
                 return recorrer(nodo.derecha)
+
+        # Conmutativa: A + B = B + A, A * B = B * A
+        if nodo.valor in ["+", "*"] and str(nodo.izquierda) > str(nodo.derecha):
+            pasos.append({"ley": "Conmutativa", "antes": antes, "despues": f"({nodo.derecha}{nodo.valor}{nodo.izquierda})"})
+            return Nodo(nodo.valor, nodo.derecha, nodo.izquierda)
+
+        # Asociativa (ejemplo para +)
+        if nodo.valor == "+" and nodo.derecha and nodo.derecha.valor == "+":
+            pasos.append({"ley": "Asociativa", "antes": antes, "despues": f"(({nodo.izquierda}+{nodo.derecha.izquierda})+{nodo.derecha.derecha})"})
+            return Nodo("+", Nodo("+", nodo.izquierda, nodo.derecha.izquierda), nodo.derecha.derecha)
+
+        # Distributiva: A*(B+C) = A*B + A*C
+        if nodo.valor == "*" and nodo.derecha and nodo.derecha.valor == "+":
+            pasos.append({"ley": "Distributiva", "antes": antes, "despues": f"({nodo.izquierda}*{nodo.derecha.izquierda}+{nodo.izquierda}*{nodo.derecha.derecha})"})
+            return Nodo("+", Nodo("*", nodo.izquierda, nodo.derecha.izquierda), Nodo("*", nodo.izquierda, nodo.derecha.derecha))
+        if nodo.valor == "*" and nodo.izquierda and nodo.izquierda.valor == "+":
+            pasos.append({"ley": "Distributiva", "antes": antes, "despues": f"({nodo.izquierda.izquierda}*{nodo.derecha}+{nodo.izquierda.derecha}*{nodo.derecha})"})
+            return Nodo("+", Nodo("*", nodo.izquierda.izquierda, nodo.derecha), Nodo("*", nodo.izquierda.derecha, nodo.derecha))
+
+        # De Morgan
+        if nodo.valor == "~" and nodo.izquierda and nodo.izquierda.valor in ["+", "*"]:
+            if nodo.izquierda.valor == "+":
+                pasos.append({"ley": "De Morgan", "antes": antes, "despues": f"(~{nodo.izquierda.izquierda} * ~{nodo.izquierda.derecha})"})
+                return Nodo("*", Nodo("~", nodo.izquierda.izquierda), Nodo("~", nodo.izquierda.derecha))
+            if nodo.izquierda.valor == "*":
+                pasos.append({"ley": "De Morgan", "antes": antes, "despues": f"(~{nodo.izquierda.izquierda} + ~{nodo.izquierda.derecha})"})
+                return Nodo("+", Nodo("~", nodo.izquierda.izquierda), Nodo("~", nodo.izquierda.derecha))
 
         return nodo
 

@@ -9,10 +9,10 @@ historial_expresiones = []
 
 def normalizar_expresion(expresion):
     """
-    Convierte expresiones como AB o A1 en A*B o A*1 automáticamente.
+    convierte expresiones como AB o A1 por A*B o A*1.
     """
     expr = expresion.replace(" ", "")
-    # Agrega * entre: letra seguida de letra o número
+    # aqui agregamos * entre: letra seguida de letra o número
     expr = re.sub(r"([A-Z0-1])(?=[A-Z0-1])", r"\1*", expr)
     return expr
 
@@ -26,10 +26,9 @@ def index():
 
     if request.method == "POST":
         funcion_original = request.form.get("expresion", "").strip()
-        # Normalizar la expresión
         funcion_normalizada = normalizar_expresion(funcion_original)
 
-        # Validación
+
         error = validar_expresion(funcion_normalizada)
         if not error:
             try:
