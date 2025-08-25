@@ -6,44 +6,67 @@
 <h1 class="mb-4">Simplificador de Funciones Booleanas</h1>
 <p class="lead">Construye tu función booleana usando los botones y observa cómo se simplifica paso a paso.</p>
 
-<div class="card shadow-sm">
-  <div class="card-body">
+<div class="card shadow-sm position-relative">
+  <!-- Botón +Más Variables -->
+  <button type="button" class="btn btn-success position-absolute top-0 end-0 m-2"
+          style="background-color: #76c776; border-color: #76c776;"
+          onclick="window.location.href='{{ url_for('routes.variables') }}'">
+    + Más Variables
+  </button>
 
-    <!-- Entrada de texto solo lectura -->
-    <div class="mb-3">
-      <input type="text" id="entrada" class="form-control form-control-lg" placeholder="Construye tu expresión" value="{{ funcion_original }}" readonly>
+  <div class="card-body pt-5">
+
+    <!-- Entrada de texto editable -->
+    <div class="mb-2">
+      <input type="text" id="entrada" class="form-control form-control-lg"
+             placeholder="Construye tu expresión" value="{{ funcion_original }}">
+      {% if error %}
+        <div class="text-danger mt-1"><strong>{{ error }}</strong></div>
+      {% endif %}
     </div>
 
-    <!-- Botones de variables -->
-    <div class="mb-2">
-      <button type="button" class="btn btn-outline-primary btn-lg" onclick="agregar('A')">A</button>
-      <button type="button" class="btn btn-outline-primary btn-lg" onclick="agregar('B')">B</button>
-      <button type="button" class="btn btn-outline-primary btn-lg" onclick="agregar('C')">C</button>
-      <button type="button" class="btn btn-outline-primary btn-lg" onclick="agregar('D')">D</button>
-      <button type="button" class="btn btn-outline-primary btn-lg" onclick="agregar('E')">E</button>
-    </div>
+    <!-- Contenedor principal con espacio entre los elementos -->
+    <div class="d-flex justify-content-between align-items-start">
 
-    <!-- Botones de valores constantes -->
-    <div class="mb-2">
-      <button type="button" class="btn btn-outline-secondary btn-lg" onclick="agregar('1')">1</button>
-      <button type="button" class="btn btn-outline-secondary btn-lg" onclick="agregar('0')">0</button>
-    </div>
+      <!-- Columna de botones de letras, números y operadores -->
+      <div class="flex-column me-3">
+        <!-- Botones de variables -->
+        <div class="mb-2">
+          <button type="button" class="btn btn-outline-primary btn-lg" onclick="agregar('A')">A</button>
+          <button type="button" class="btn btn-outline-primary btn-lg" onclick="agregar('B')">B</button>
+          <button type="button" class="btn btn-outline-primary btn-lg" onclick="agregar('C')">C</button>
+          <button type="button" class="btn btn-outline-primary btn-lg" onclick="agregar('D')">D</button>
+          <button type="button" class="btn btn-outline-primary btn-lg" onclick="agregar('E')">E</button>
+        </div>
 
-    <!-- Botones de operadores -->
-    <div class="mb-2">
-      <button type="button" class="btn btn-outline-warning btn-lg" onclick="agregar('+')">+</button>
-      <button type="button" class="btn btn-outline-warning btn-lg" onclick="agregar('*')">*</button>
-      <button type="button" class="btn btn-outline-warning btn-lg" onclick="agregar('~')">~</button>
-      <button type="button" class="btn btn-outline-warning btn-lg" onclick="agregar('(')">(</button>
-      <button type="button" class="btn btn-outline-warning btn-lg" onclick="agregar(')')">)</button>
-      <button type="button" class="btn btn-danger btn-lg" onclick="borrar()">⌫</button>
-      <button type="button" class="btn btn-danger btn-lg" onclick="limpiar()">C</button>
+        <!-- Botones de valores constantes -->
+        <div class="mb-2">
+          <button type="button" class="btn btn-outline-secondary btn-lg" onclick="agregar('1')">1</button>
+          <button type="button" class="btn btn-outline-secondary btn-lg" onclick="agregar('0')">0</button>
+        </div>
+
+        <!-- Botones de operadores -->
+        <div class="mb-2">
+          <button type="button" class="btn btn-outline-warning btn-lg" onclick="agregar('+')">+</button>
+          <button type="button" class="btn btn-outline-warning btn-lg" onclick="agregar('*')">*</button>
+          <button type="button" class="btn btn-outline-warning btn-lg" onclick="agregar('~')">~</button>
+          <button type="button" class="btn btn-outline-warning btn-lg" onclick="agregar('(')">(</button>
+          <button type="button" class="btn btn-outline-warning btn-lg" onclick="agregar(')')">)</button>
+        </div>
+      </div>
+
+      <!-- Columna de botones "Limpiar/Eliminar" -->
+      <div class="d-flex flex-column justify-content-center ms-auto">
+        <button type="button" class="btn btn-danger btn-lg mb-2" onclick="borrar()">⌫ Eliminar</button>
+        <button type="button" class="btn btn-danger btn-lg" onclick="limpiar()">Limpiar</button>
+      </div>
+
     </div>
 
     <!-- Botón para simplificar -->
-    <form method="POST" class="mt-3">
+    <form method="POST" class="mt-3" onsubmit="actualizarExpresion()">
       <input type="hidden" id="hidden-expresion" name="expresion">
-      <button type="submit" class="btn btn-primary btn-lg w-100" onclick="actualizarExpresion()">Simplificar</button>
+      <button type="submit" class="btn btn-primary btn-lg w-100">Simplificar</button>
     </form>
 
     <!-- Mostrar función ingresada -->
@@ -81,30 +104,48 @@
 
   </div>
 </div>
+
 <!-- Historial de expresiones -->
-  {% if historial %}
-  <div class="mb-3">
-    <label for="historial" class="form-label">Historial de expresiones:</label>
-    <select id="historial" class="form-select" onchange="cargarHistorial()">
-      <option value="">-- Selecciona una expresión --</option>
-      {% for h in historial %}
-        <option value="{{ h }}">{{ h }}</option>
-      {% endfor %}
-    </select>
-  </div>
-  {% endif %}
+{% if historial %}
+<div class="mb-3">
+  <label for="historial" class="form-label">Historial de expresiones:</label>
+  <select id="historial" class="form-select" onchange="cargarHistorial()">
+    <option value="">-- Selecciona una expresión --</option>
+    {% for h in historial %}
+      <option value="{{ h }}">{{ h }}</option>
+    {% endfor %}
+  </select>
+</div>
+{% endif %}
+
 <script>
 function agregar(valor) {
-    document.getElementById('entrada').value += valor;
+    const input = document.getElementById('entrada');
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    input.value = input.value.slice(0, start) + valor + input.value.slice(end);
+    input.setSelectionRange(start + valor.length, start + valor.length);
+    input.focus();
 }
 
 function borrar() {
-    let e = document.getElementById('entrada');
-    e.value = e.value.slice(0, -1);
+    const input = document.getElementById('entrada');
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    if (start === end && start > 0) {
+        input.value = input.value.slice(0, start - 1) + input.value.slice(end);
+        input.setSelectionRange(start - 1, start - 1);
+    } else {
+        input.value = input.value.slice(0, start) + input.value.slice(end);
+        input.setSelectionRange(start, start);
+    }
+    input.focus();
 }
 
 function limpiar() {
-    document.getElementById('entrada').value = '';
+    const input = document.getElementById('entrada');
+    input.value = '';
+    input.focus();
 }
 
 function actualizarExpresion() {

@@ -1,4 +1,43 @@
+import re
 from .nodo import Nodo
+
+def validar_expresion(expresion):
+    if not expresion.strip():
+        return "La expresión no puede estar vacía."
+
+    # Quitar espacios
+    expr = expresion.replace(" ", "")
+
+    # Verificar caracteres válidos
+    if not re.fullmatch(r"[A-Z01~+*()]*", expr):
+        return "La expresión contiene caracteres inválidos."
+
+    # Verificar paréntesis balanceados
+    paren = 0
+    for c in expr:
+        if c == "(":
+            paren += 1
+        elif c == ")":
+            paren -= 1
+        if paren < 0:
+            return "Paréntesis desbalanceados: se cerró uno que no estaba abierto."
+    if paren != 0:
+        return "Paréntesis desbalanceados: falta cerrar algún paréntesis."
+
+    # Verificar operadores dobles consecutivos (excepto ~~)
+    operadores = "+*"
+    prev = ""
+    for c in expr:
+        if c in operadores and prev in operadores:
+            return f"Operadores consecutivos no permitidos: '{prev}{c}'"
+        prev = c
+
+    # Verificar que la expresión no comience ni termine con operadores prohibidos
+    if expr[0] in "+*" or expr[-1] in "+*":
+        return "La expresión no puede comenzar ni terminar con '+' o '*'"
+
+    return None  # Si todo está bien
+
 
 def construir_arbol(expresion):
     tokens = list(expresion.replace(" ", ""))

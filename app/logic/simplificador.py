@@ -52,6 +52,32 @@ def simplificar_arbol(arbol):
             pasos.append({"ley": "Doble negación", "antes": antes, "despues": str(nodo.izquierda.izquierda)})
             return recorrer(nodo.izquierda.izquierda)
 
+        # 🔹 Ley de absorción (OR)
+        if nodo.valor == "+" and nodo.izquierda and nodo.derecha:
+            izq = str(nodo.izquierda)
+            der = str(nodo.derecha)
+            # A + A*B = A
+            if "*" in der and izq in der:
+                pasos.append({"ley": "Absorción", "antes": antes, "despues": izq})
+                return recorrer(nodo.izquierda)
+            # A*B + A = A
+            if "*" in izq and der in izq:
+                pasos.append({"ley": "Absorción", "antes": antes, "despues": der})
+                return recorrer(nodo.derecha)
+
+        # 🔹 Ley de absorción (AND)
+        if nodo.valor == "*" and nodo.izquierda and nodo.derecha:
+            izq = str(nodo.izquierda)
+            der = str(nodo.derecha)
+            # A * (A + B) = A
+            if "+" in der and izq in der:
+                pasos.append({"ley": "Absorción", "antes": antes, "despues": izq})
+                return recorrer(nodo.izquierda)
+            # (A + B) * A = A
+            if "+" in izq and der in izq:
+                pasos.append({"ley": "Absorción", "antes": antes, "despues": der})
+                return recorrer(nodo.derecha)
+
         return nodo
 
     cambio = True
