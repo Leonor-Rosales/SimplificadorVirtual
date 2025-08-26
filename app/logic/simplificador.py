@@ -14,7 +14,7 @@ def simplificar_arbol(arbol):
 
         antes = str(nodo)
 
-        # Idempotencia: A + A = A, A * A = A
+        # Idempotencia
         if nodo.valor in ["+", "*"] and nodo.izquierda and nodo.derecha:
             if str(nodo.izquierda) == str(nodo.derecha):
                 pasos.append({"ley": "Idempotencia", "antes": antes, "despues": str(nodo.izquierda)})
@@ -63,28 +63,28 @@ def simplificar_arbol(arbol):
         # Ley de absorción
         if nodo.valor == "+" and nodo.izquierda and nodo.derecha:
             izq, der = str(nodo.izquierda), str(nodo.derecha)
-            if "*" in der and izq in der:  # A + A*B = A
+            if "*" in der and izq in der:  
                 pasos.append({"ley": "Absorción", "antes": antes, "despues": izq})
                 return recorrer(nodo.izquierda)
-            if "*" in izq and der in izq:  # A*B + A = A
+            if "*" in izq and der in izq: 
                 pasos.append({"ley": "Absorción", "antes": antes, "despues": der})
                 return recorrer(nodo.derecha)
 
         if nodo.valor == "*" and nodo.izquierda and nodo.derecha:
             izq, der = str(nodo.izquierda), str(nodo.derecha)
-            if "+" in der and izq in der:  # A * (A+B) = A
+            if "+" in der and izq in der:  
                 pasos.append({"ley": "Absorción", "antes": antes, "despues": izq})
                 return recorrer(nodo.izquierda)
-            if "+" in izq and der in izq:  # (A+B) * A = A
+            if "+" in izq and der in izq: 
                 pasos.append({"ley": "Absorción", "antes": antes, "despues": der})
                 return recorrer(nodo.derecha)
 
-        # Conmutativa: A + B = B + A, A * B = B * A
+        # Conmutativa
         if nodo.valor in ["+", "*"] and str(nodo.izquierda) > str(nodo.derecha):
             pasos.append({"ley": "Conmutativa", "antes": antes, "despues": f"({nodo.derecha}{nodo.valor}{nodo.izquierda})"})
             return Nodo(nodo.valor, nodo.derecha, nodo.izquierda)
 
-        # Asociativa (ejemplo para +)
+        # Asociativa 
         if nodo.valor == "+" and nodo.derecha and nodo.derecha.valor == "+":
             pasos.append({"ley": "Asociativa", "antes": antes, "despues": f"(({nodo.izquierda}+{nodo.derecha.izquierda})+{nodo.derecha.derecha})"})
             return Nodo("+", Nodo("+", nodo.izquierda, nodo.derecha.izquierda), nodo.derecha.derecha)

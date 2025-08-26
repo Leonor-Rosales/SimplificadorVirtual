@@ -5,10 +5,8 @@ def validar_expresion(expresion):
     if not expresion.strip():
         return "La expresión no puede estar vacía."
 
-    # quitamos espacios
     expr = expresion.replace(" ", "")
 
-    # verificamos caracteres validos
     if not re.fullmatch(r"[A-Z01~+*()]*", expr):
         return "La expresión contiene caracteres inválidos."
 
@@ -36,7 +34,7 @@ def validar_expresion(expresion):
     if expr[0] in "+*" or expr[-1] in "+*":
         return "La expresión no puede comenzar ni terminar con '+' o '*'"
 
-    return None  # Si todo está bien
+    return None  
 
 
 def construir_arbol(expresion):
