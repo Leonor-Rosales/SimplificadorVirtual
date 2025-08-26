@@ -14,35 +14,35 @@ def simplificar_arbol(arbol):
 
         antes = str(nodo)
 
-        # 🔹 Idempotencia
+        # Ley Idempotencia
         if nodo.valor in ["+", "*"] and nodo.izquierda and nodo.derecha:
             if str(nodo.izquierda) == str(nodo.derecha):
                 pasos.append({"ley": "Idempotencia", "antes": antes, "despues": str(nodo.izquierda)})
                 return recorrer(nodo.izquierda)
 
-        # 🔹 Elemento nulo e identidad
-        if nodo.valor == "+":
+        # Ley Identidad y Anulación
+        if nodo.valor == "+":  # OR
             if str(nodo.izquierda) == "0":
-                pasos.append({"ley": "Elemento nulo", "antes": antes, "despues": str(nodo.derecha)})
+                pasos.append({"ley": "Identidad", "antes": antes, "despues": str(nodo.derecha)})
                 return recorrer(nodo.derecha)
             if str(nodo.derecha) == "0":
-                pasos.append({"ley": "Elemento nulo", "antes": antes, "despues": str(nodo.izquierda)})
+                pasos.append({"ley": "Identidad", "antes": antes, "despues": str(nodo.izquierda)})
                 return recorrer(nodo.izquierda)
             if str(nodo.izquierda) == "1" or str(nodo.derecha) == "1":
-                pasos.append({"ley": "Elemento identidad", "antes": antes, "despues": "1"})
+                pasos.append({"ley": "Anulación", "antes": antes, "despues": "1"})
                 return Nodo("1")
-        if nodo.valor == "*":
+        if nodo.valor == "*":  # AND
             if str(nodo.izquierda) == "0" or str(nodo.derecha) == "0":
-                pasos.append({"ley": "Elemento nulo", "antes": antes, "despues": "0"})
+                pasos.append({"ley": "Anulación", "antes": antes, "despues": "0"})
                 return Nodo("0")
             if str(nodo.izquierda) == "1":
-                pasos.append({"ley": "Elemento identidad", "antes": antes, "despues": str(nodo.derecha)})
+                pasos.append({"ley": "Identidad", "antes": antes, "despues": str(nodo.derecha)})
                 return recorrer(nodo.derecha)
             if str(nodo.derecha) == "1":
-                pasos.append({"ley": "Elemento identidad", "antes": antes, "despues": str(nodo.izquierda)})
+                pasos.append({"ley": "Identidad", "antes": antes, "despues": str(nodo.izquierda)})
                 return recorrer(nodo.izquierda)
 
-        # 🔹 Complemento
+        # Ley Complemento
         if nodo.valor == "+" and (str(nodo.izquierda) == f"~({nodo.derecha})" or str(nodo.derecha) == f"~({nodo.izquierda})"):
             pasos.append({"ley": "Complemento", "antes": antes, "despues": "1"})
             return Nodo("1")
@@ -50,12 +50,12 @@ def simplificar_arbol(arbol):
             pasos.append({"ley": "Complemento", "antes": antes, "despues": "0"})
             return Nodo("0")
 
-        # 🔹 Doble negación (Involución)
+        # Ley Doble negación
         if nodo.valor == "~" and nodo.izquierda.valor == "~":
             pasos.append({"ley": "Doble negación", "antes": antes, "despues": str(nodo.izquierda.izquierda)})
             return recorrer(nodo.izquierda.izquierda)
 
-        # 🔹 Absorción
+        # Ley Absorción
         if nodo.valor == "+":
             if nodo.derecha and nodo.derecha.valor == "*":
                 if str(nodo.izquierda) == str(nodo.derecha.izquierda) or str(nodo.izquierda) == str(nodo.derecha.derecha):
@@ -75,7 +75,7 @@ def simplificar_arbol(arbol):
                     pasos.append({"ley": "Absorción", "antes": antes, "despues": str(nodo.derecha)})
                     return recorrer(nodo.derecha)
 
-        # 🔹 De Morgan
+        #Ley Morgan
         if nodo.valor == "~" and nodo.izquierda:
             if nodo.izquierda.valor == "+":
                 nuevo = Nodo("*", Nodo("~", nodo.izquierda.izquierda), Nodo("~", nodo.izquierda.derecha))

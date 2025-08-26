@@ -30,7 +30,6 @@ def validar_expresion(expresion):
             return f"Operadores consecutivos no permitidos: '{prev}{c}'"
         prev = c
 
-    # verificar si la funcion empieza con *
     if expr[0] in "+*" or expr[-1] in "+*":
         return "La expresión no puede comenzar ni terminar con '+' o '*'"
 

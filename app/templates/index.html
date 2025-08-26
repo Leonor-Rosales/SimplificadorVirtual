@@ -19,7 +19,7 @@
 
     <div class="mb-2">
       <input type="text" id="entrada" class="form-control form-control-lg"
-             placeholder="Construye tu expresión" value="{{ funcion_original }}">
+             placeholder="Construye tu expresión" value="{{ funcion_original }}" readonly>
       {% if error %}
         <div class="text-danger mt-1"><strong>{{ error }}</strong></div>
       {% endif %}

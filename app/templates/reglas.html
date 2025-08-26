@@ -13,7 +13,7 @@
             <li><strong>OR</strong>: usa <code>+</code> → Ejemplo: <code>A + B</code></li>
             <li><strong>AND</strong>: usa <code>*</code> → Ejemplo: <code>A * B</code></li>
             <li><strong>NOT</strong>: usa <code>~</code> → Ejemplo: <code>~A</code></li>
-            <li>Puedes combinar: <code>(A + B) * C'</code></li>
+            <li>Puedes combinar: <code>(A + B) * C</code></li>
         </ul>
     </div>
 
@@ -29,11 +29,11 @@
             </div>
         </div>
 
-        <!-- Dominación -->
+        <!-- Anulación (Dominación) -->
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Ley de Dominación</h5>
+                    <h5 class="card-title">Ley de Anulación</h5>
                     <p class="card-text">A + 1 = 1<br>A * 0 = 0</p>
                 </div>
             </div>
@@ -59,22 +59,22 @@
             </div>
         </div>
 
-        <!-- Doble Negación -->
+        <!-- Doble Negación / Involución -->
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
                     <h5 class="card-title">Ley de la Doble Negación</h5>
-                    <p class="card-text">(A')' = A</p>
+                    <p class="card-text">~~A = A</p>
                 </div>
             </div>
         </div>
 
-        <!-- Conmutativa -->
+        <!-- Absorción -->
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Ley Conmutativa</h5>
-                    <p class="card-text">A + B = B + A<br>A * B = B * A</p>
+                    <h5 class="card-title">Ley de Absorción</h5>
+                    <p class="card-text">A + (A * B) = A<br>A * (A + B) = A</p>
                 </div>
             </div>
         </div>
@@ -83,9 +83,10 @@
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Ley De Morgan</h5>
-                    <p class="card-text">(A ∧ B)' = A' ∨ B'<br>(A ∨ B)' = A' ∧ B'</p>
+                    <h5 class="card-title">Ley de De Morgan</h5>
+                    <p class="card-text">~(A + B) = ~A * ~B<br>~(A * B) = ~A + ~B</p>
                 </div>
             </div>
         </div>
+    </div>
 {% endblock %}
