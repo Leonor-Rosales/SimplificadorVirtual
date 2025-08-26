@@ -10,7 +10,7 @@ def validar_expresion(expresion):
     if not re.fullmatch(r"[A-Z01~+*()]*", expr):
         return "La expresión contiene caracteres inválidos."
 
-    #balancear
+    #se comprea el balanceo
     paren = 0
     for c in expr:
         if c == "(":
@@ -22,7 +22,7 @@ def validar_expresion(expresion):
     if paren != 0:
         return "Paréntesis desbalanceados: falta cerrar algún paréntesis."
 
-    # verificaciopn de operadores
+    #Se verifican los operadores
     operadores = "+*"
     prev = ""
     for c in expr:
